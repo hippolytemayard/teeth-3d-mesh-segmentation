@@ -10,13 +10,14 @@ from teeth_3d_seg.utils.file import load_json
 
 
 class MeshDataset(Dataset):
-    def __init__(self, data_folder: str, patch_size: int = 7000):
+    def __init__(self, data_folder: str, label_encoder: str, patch_size: int = 7000):
         self.data_list = list(Path(data_folder).glob("**/*.obj"))
         self.label_list = list(Path(data_folder).glob("**/*.json"))
         self.patch_size = patch_size
+        self.label_encoder = load_json(label_encoder)["label"]
 
     def __len__(self):
-        return self.data_list.shape[0]
+        return len(self.data_list)
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
@@ -24,13 +25,15 @@ class MeshDataset(Dataset):
 
         mesh = load(inputobj=str(self.data_list[idx]))
         labels = load_json(file_path=str(self.label_list[idx]))["labels"]
+        labels = [self.label_encoder[str(label_)] for label_ in labels]
+        labels = np.array(labels).astype("int16").reshape(-1, 1)
 
         points = mesh.points()
         mean_cell_centers = mesh.center_of_mass()
         points[:, 0:3] -= mean_cell_centers[0:3]
 
         ids = np.array(mesh.faces())
-        cells = points[ids].reshape(mesh.ncells, 9).astype(dtype="float32")
+        cells = points[ids].reshape(mesh.ncells, 9).astype(dtype="float16")
 
         mesh.compute_normals()
         normals = mesh.celldata["Normals"]
@@ -58,10 +61,11 @@ class MeshDataset(Dataset):
         Y = labels
 
         # initialize batch of input and label
-        X_train = np.zeros([self.patch_size, X.shape[1]], dtype="float32")
-        Y_train = np.zeros([self.patch_size, Y.shape[1]], dtype="int32")
-        S1 = np.zeros([self.patch_size, self.patch_size], dtype="float32")
-        S2 = np.zeros([self.patch_size, self.patch_size], dtype="float32")
+        X_train = np.zeros([self.patch_size, X.shape[1]], dtype="float16")
+        Y_train = np.zeros([self.patch_size, Y.shape[1]], dtype="int16")
+
+        S1 = np.zeros([self.patch_size, self.patch_size], dtype="float16")
+        S2 = np.zeros([self.patch_size, self.patch_size], dtype="float16")
 
         # calculate number of valid cells (tooth instead of gingiva)
         positive_idx = np.argwhere(labels > 0)[:, 0]  # tooth idx

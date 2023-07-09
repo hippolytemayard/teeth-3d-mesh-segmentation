@@ -1,7 +1,3 @@
-import torch
-import numpy as np
-
-
 def Generalized_Dice_Loss(y_pred, y_true, class_weights, smooth=1.0):
     """
     inputs:
