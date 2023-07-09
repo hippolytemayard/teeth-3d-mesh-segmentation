@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Hippolyte Mayard"]
 readme = "README.md"
-packages = [{include = "teeth-3d-seg"}]
+packages = [{include = "teeth_3d_seg"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
