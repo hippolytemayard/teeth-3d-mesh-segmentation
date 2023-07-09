@@ -1,0 +1,31 @@
+save_dir : /data/ubuntu/data/saved_models/tooth-mesh-seg/
+experiment : 1
+
+data:
+  dataset:
+    patch_size: 1000
+  loader:
+    num_workers: 0
+    train:
+      batch_size: 8
+      shuffle: True
+    validation:
+      batch_size: 2
+      shuffle: False
+
+  label_encoder: "/data/ubuntu/code/teeth-3d-mesh-segmentation/teeth_3d_seg/configs/label_encoder.json"
+
+model: 
+  num_classes: 17
+  num_channels: 15
+  dropout: True
+  dropout_proba : 0.5
+
+train: 
+  epochs: 300
+  lr: 1.e-3
+  tensorboard: True
+  num_batches_to_print: 20
+
+  debug: True
+      

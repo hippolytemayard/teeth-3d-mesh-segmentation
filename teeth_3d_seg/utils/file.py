@@ -1,5 +1,7 @@
 import json
 
+from omegaconf import DictConfig, OmegaConf
+
 
 def load_json(file_path: str) -> dict:
     """Loading a json file
@@ -18,3 +20,9 @@ def load_json(file_path: str) -> dict:
         json_file = json.load(f)
 
     return json_file
+
+
+def load_yaml(path: str) -> DictConfig:
+    """Load yaml into DictConfig omegaconf format"""
+    yaml_file = OmegaConf.load(path)
+    return yaml_file
