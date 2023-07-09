@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "teeth-3d-seg"
+version = "0.1.0"
+description = ""
+authors = ["Hippolyte Mayard"]
+readme = "README.md"
+packages = [{include = "teeth-3d-seg"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = {url = "https://download.pytorch.org/whl/cu116/torch-1.13.1%2Bcu116-cp310-cp310-linux_x86_64.whl"}
+torchvision = {url = "https://download.pytorch.org/whl/cu116/torchvision-0.14.1%2Bcu116-cp310-cp310-linux_x86_64.whl"}
+
+tqdm = "^4.64.1"
+omegaconf = "^2.3.0"
+tensorboard = "^2.11.0"
+matplotlib = "^3.6.2"
+kaleido = "0.2.1"
+jupyterlab = "^3.5.2"
+numpy = "1.23.5"
+pandas = "^2.0.2"
+scikit-learn = "^1.2.2"
+seaborn = "^0.12.2"
+jupyter = "^1.0.0"
+notebook = "^6.5.4"
+vedo = "^2023.4.6"
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+line_length = 120
+profile = 'black'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
