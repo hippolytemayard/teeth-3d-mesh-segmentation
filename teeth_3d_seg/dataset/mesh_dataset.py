@@ -9,7 +9,7 @@ from vedo import load
 from teeth_3d_seg.utils.file import load_json
 
 
-class Mesh_Dataset(Dataset):
+class MeshDataset(Dataset):
     def __init__(self, data_folder: str, patch_size: int = 7000):
         self.data_list = list(Path(data_folder).glob("**/*.obj"))
         self.label_list = list(Path(data_folder).glob("**/*.json"))
