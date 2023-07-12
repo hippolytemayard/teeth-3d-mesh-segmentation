@@ -43,6 +43,7 @@ def train(
             config=config,
             class_weights=class_weights,
             epoch=epoch,
+            writer=writer,
         )
 
         losses.append(loss_epoch)
@@ -81,6 +82,10 @@ def train(
             )
 
         if writer is not None:
+            writer.add_scalar("loss train", losses[-1], epoch + 1)
+            writer.add_scalar("DSC train", mdsc[-1], epoch + 1)
+            writer.add_scalar("SEN train", msen[-1], epoch + 1)
+            writer.add_scalar("PPV train", mppv[-1], epoch + 1)
             writer.add_scalar("loss validation", val_losses[-1], epoch + 1)
             writer.add_scalar("DSC validation", val_mdsc[-1], epoch + 1)
             writer.add_scalar("SEN validation", val_msen[-1], epoch + 1)
@@ -101,7 +106,7 @@ def train(
                 "val_msen": val_msen,
                 "val_mppv": val_mppv,
             },
-            config.save_dir + f"checkpoint_epoch{epoch.pt}",
+            config.save_dir + f"checkpoint_epoch{epoch}.pt",
         )
 
         # save the best model
@@ -111,7 +116,7 @@ def train(
                 {
                     "epoch": epoch + 1,
                     "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": opt.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
                     "losses": losses,
                     "mdsc": mdsc,
                     "msen": msen,
@@ -136,7 +141,7 @@ def train(
             "val_PPV": val_mppv,
         }
         stat = pd.DataFrame(pd_dict)
-        stat.to_csv("losses_metrics_vs_epoch.csv")
+        stat.to_csv(f"losses_metrics_vs_epoch_{epoch}.csv")
 
 
 def training_loop(loader, model, optimizer, device, config, class_weights, epoch, writer=None):
@@ -201,16 +206,24 @@ def training_loop(loader, model, optimizer, device, config, class_weights, epoch
 
             if writer is not None:
                 writer.add_scalar(
-                    "loss", running_loss / config.train.num_batches_to_print, int(epoch + (i_batch + 1) / len(loader))
+                    "loss_batch",
+                    running_loss / config.train.num_batches_to_print,
+                    int(epoch + (i_batch + 1) / len(loader)),
                 )
                 writer.add_scalar(
-                    "DSC", running_mdsc / config.train.num_batches_to_print, int(epoch + (i_batch + 1) / len(loader))
+                    "DSC_batch",
+                    running_mdsc / config.train.num_batches_to_print,
+                    int(epoch + (i_batch + 1) / len(loader)),
                 )
                 writer.add_scalar(
-                    "SEN", running_msen / config.train.num_batches_to_print, int(epoch + (i_batch + 1) / len(loader))
+                    "SEN_batch",
+                    running_msen / config.train.num_batches_to_print,
+                    int(epoch + (i_batch + 1) / len(loader)),
                 )
                 writer.add_scalar(
-                    "PPV", running_mppv / config.train.num_batches_to_print, int(epoch + (i_batch + 1) / len(loader))
+                    "PPV_batch",
+                    running_mppv / config.train.num_batches_to_print,
+                    int(epoch + (i_batch + 1) / len(loader)),
                 )
 
             running_loss = 0.0
