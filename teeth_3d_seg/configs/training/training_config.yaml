@@ -1,13 +1,13 @@
 save_dir : /data/ubuntu/data/saved_models/tooth-mesh-seg/
-experiment : 1
+experiment : 3
 
 data:
   dataset:
-    patch_size: 1000
+    patch_size: 10000
   loader:
     num_workers: 0
     train:
-      batch_size: 8
+      batch_size: 2
       shuffle: True
     validation:
       batch_size: 2
@@ -25,7 +25,7 @@ train:
   epochs: 300
   lr: 1.e-3
   tensorboard: True
-  num_batches_to_print: 20
+  num_batches_to_print: 1
 
   debug: True
       

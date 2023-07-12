@@ -12,11 +12,13 @@ from teeth_3d_seg.training.training import train
 from teeth_3d_seg.utils.file import load_yaml
 
 if __name__ == "__main__":
+    torch.multiprocessing.set_start_method("spawn")
+
     logging.basicConfig(level=logging.INFO)
     config = load_yaml(path=CONFIG_PATH)
 
     # TODO include validation to loader
-    val_dir = "/data/ubuntu/data/Teeth3DS/test_set/"
+    val_dir = "/data/ubuntu/data/test_set/"
     save_dir = Path(config.save_dir)
     experiment_dir = save_dir / f"experiment{config.experiment}"
     save_dir.mkdir(exist_ok=True)
@@ -42,6 +44,9 @@ if __name__ == "__main__":
         patch_size=config.data.dataset.patch_size,
         num_workers=config.data.loader.num_workers,
     )
+
+    logging.info(f"Training loader has size : {len(train_loader)}")
+    logging.info(f"Validation loader has size : {len(validation_loader)}")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

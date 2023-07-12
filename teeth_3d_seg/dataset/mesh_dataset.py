@@ -11,8 +11,8 @@ from teeth_3d_seg.utils.file import load_json
 
 class MeshDataset(Dataset):
     def __init__(self, data_folder: str, label_encoder: str, patch_size: int = 7000):
-        self.data_list = list(Path(data_folder).glob("**/*.obj"))
-        self.label_list = list(Path(data_folder).glob("**/*.json"))
+        self.data_list = list(Path(data_folder).glob("**/*_upper.obj"))
+        self.label_list = list(Path(data_folder).glob("**/*_upper.json"))
         self.patch_size = patch_size
         self.label_encoder = load_json(label_encoder)["label"]
 
