@@ -1,4 +1,5 @@
 import json
+import os
 
 from omegaconf import DictConfig, OmegaConf
 
@@ -26,3 +27,8 @@ def load_yaml(path: str) -> DictConfig:
     """Load yaml into DictConfig omegaconf format"""
     yaml_file = OmegaConf.load(path)
     return yaml_file
+
+
+def make_exists(file_path):
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
