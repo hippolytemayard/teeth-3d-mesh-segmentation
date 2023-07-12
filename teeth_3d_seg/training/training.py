@@ -106,7 +106,7 @@ def train(
                 "val_msen": val_msen,
                 "val_mppv": val_mppv,
             },
-            config.save_dir + f"checkpoint_epoch{epoch}.pt",
+            Path(config.save_dir) / f"experiment{config.experiment}" / f"checkpoint_epoch{epoch}.pt",
         )
 
         # save the best model
@@ -126,7 +126,7 @@ def train(
                     "val_msen": val_msen,
                     "val_mppv": val_mppv,
                 },
-                config.save_dir + "{}_best.pt".format("best_model"),
+                Path(config.save_dir) / f"experiment{config.experiment}" / "best_model_best.pt",
             )
 
         # save all losses and metrics data
@@ -141,7 +141,7 @@ def train(
             "val_PPV": val_mppv,
         }
         stat = pd.DataFrame(pd_dict)
-        stat.to_csv(f"losses_metrics_vs_epoch_{epoch}.csv")
+        stat.to_csv(Path(config.save_dir) / f"experiment{config.experiment}" / f"losses_metrics_vs_epoch_{epoch}.csv")
 
 
 def training_loop(loader, model, optimizer, device, config, class_weights, epoch, writer=None):
